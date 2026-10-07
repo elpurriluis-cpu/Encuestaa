@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Encuesta Especial</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #fce4ec, #f8bbd0);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #880e4f;
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+        .card {
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 340px;
+        }
+
+        h1, h2 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+        }
+
+        .btn-row {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        button {
+            background-color: #e91e63;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 25px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(233, 30, 99, 0.3);
+            transition: transform 0.2s;
+        }
+
+        button:active {
+            transform: scale(0.95);
+        }
+
+        .btn-no {
+            background-color: #ad1457;
+        }
+
+        .oculto {
+            display: none;
+        }
+
+        .porcentajes-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .porcentajes-grid button {
+            padding: 10px 5px;
+            font-size: 0.9rem;
+            border-radius: 12px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 100px;
+            border-radius: 12px;
+            border: 2px solid #f8bbd0;
+            padding: 10px;
+            font-family: inherit;
+            font-size: 0.95rem;
+            box-sizing: border-box;
+            resize: none;
+            margin-top: 10px;
+        }
+
+        .reaccion {
+            font-size: 2rem;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <!-- Paso 1 -->
+        <div id="paso1">
+            <h1>¿Tienes sueño?</h1>
+            <div class="btn-row">
+                <button onclick="responderSueño('si')">Sí</button>
+                <button class="btn-no" onclick="responderSueño('no')">No</button>
+            </div>
+        </div>
+
+        <div id="paso1Respuesta" class="oculto">
+            <h2 id="textoSueño"></h2>
+            <button onclick="mostrarSiguientePregunta()">Continuar</button>
+        </div>
+
+        <!-- Paso 2 -->
+        <div id="paso2" class="oculto">
+            <h1>¿Quieres otra pregunta?</h1>
+            <div class="btn-row">
+                <button onclick="responderOtraPregunta('si')">Sí</button>
+                <button class="btn-no" onclick="responderOtraPregunta('no')">No</button>
+            </div>
+        </div>
+
+        <div id="paso2No" class="oculto">
+            <h2>Vas a hacer la encuesta igual carajita 🖕</h2>
+            <button onclick="irAPreguntaCariño()">Obligada continuar</button>
+        </div>
+
+        <!-- Paso 3 -->
+        <div id="paso3" class="oculto">
+            <h1>¿Qué tanto me quieres?</h1>
+            <div class="porcentajes-grid">
+                <button onclick="responderCariño(0)">0%</button>
+                <button onclick="responderCariño(20)">20%</button>
+                <button onclick="responderCariño(40)">40%</button>
+                <button onclick="responderCariño(60)">60%</button>
+                <button onclick="responderCariño(80)">80%</button>
+                <button onclick="responderCariño(89)">89%</button>
+                <button onclick="responderCariño(90)">90%</button>
+                <button onclick="responderCariño(95)">95%</button>
+                <button onclick="responderCariño(100)">100%</button>
+            </div>
+        </div>
+
+        <div id="paso3Reaccion" class="oculto">
+            <div id="textoReaccion" class="reaccion"></div>
+            <button onclick="irAEscribirMensaje()" style="margin-top: 20px;">Siguiente</button>
+        </div>
+
+        <!-- Paso 4 -->
+        <div id="paso4" class="oculto">
+            <h1>Escríbeme algo aquí:</h1>
+            <textarea id="mensajeTexto" placeholder="Escribe tu mensaje..."></textarea>
+            <button onclick="enviarResultados()" style="margin-top: 15px;">Enviar respuestas</button>
+        </div>
+    </div>
+
+    <script>
+        // CAMBIA ESTE NÚMERO POR EL TUYO CON EL CÓDIGO DE PAÍS (584241615633)
+        const MI_NUMERO_WHATSAPP = "584241615633"; 
+
+        let resSueño = "";
+        let resOtraPregunta = "";
+        let resPorcentaje = 0;
+        let resReaccion = "";
+
+        function responderSueño(respuesta) {
+            if (respuesta === 'si') {
+                resSueño = "Tienes sueño porque no dormiste conmigo";
+            } else {
+                resSueño = "Mentira si tienes sueñito, duerme conmigo...";
+            }
+            document.getElementById('paso1').classList.add('oculto');
+            document.getElementById('textoSueño').innerText = resSueño;
+            document.getElementById('paso1Respuesta').classList.remove('oculto');
+        }
+
+        function mostrarSiguientePregunta() {
+            document.getElementById('paso1Respuesta').classList.add('oculto');
+            document.getElementById('paso2').classList.remove('oculto');
+        }
+
+        function responderOtraPregunta(respuesta) {
+            document.getElementById('paso2').classList.add('oculto');
+            if (respuesta === 'si') {
+                resOtraPregunta = "Dijo que Sí a otra pregunta";
+                irAPreguntaCariño();
+            } else {
+                resOtraPregunta = "Dijo que No (Se le obligó)";
+                document.getElementById('paso2No').classList.remove('oculto');
+            }
+        }
+
+        function irAPreguntaCariño() {
+            document.getElementById('paso2No').classList.add('oculto');
+            document.getElementById('paso3').classList.remove('oculto');
+        }
+
+        function responderCariño(porcentaje) {
+            resPorcentaje = porcentaje;
+            document.getElementById('paso3').classList.add('oculto');
+
+            const contReaccion = document.getElementById('textoReaccion');
+
+            if (porcentaje < 90) {
+                resReaccion = "🖕";
+                contReaccion.innerText = "🖕";
+            } else if (porcentaje === 100) {
+                resReaccion = "Yo no JAJAJA";
+                contReaccion.innerText = "Yo no JAJAJA";
+            } else {
+                resReaccion = porcentaje + "%";
+                contReaccion.innerText = "Aceptable... ❤️";
+            }
+
+            document.getElementById('paso3Reaccion').classList.remove('oculto');
+        }
+
+        function irAEscribirMensaje() {
+            document.getElementById('paso3Reaccion').classList.add('oculto');
+            document.getElementById('paso4').classList.remove('oculto');
+        }
+
+        function enviarResultados() {
+            const textoEscrito = document.getElementById('mensajeTexto').value;
+
+            const mensajeFinal = 
+                "*RESULTADOS DE LA ENCUESTA*\n\n" +
+                "1. ¿Tiene sueño?: " + resSueño + "\n" +
+                "2. ¿Quería otra pregunta?: " + resOtraPregunta + "\n" +
+                "3. % de cariño: " + resPorcentaje + "% (" + resReaccion + ")\n\n" +
+                "📝 *Mensaje escrito:* " + (textoEscrito ? textoEscrito : "No escribió nada");
+
+            const urlWhatsApp = "https://api.whatsapp.com/send?phone=" + MI_NUMERO_WHATSAPP + "&text=" + encodeURIComponent(mensajeFinal);
+            window.location.href = urlWhatsApp;
+        }
+    </script>
+
+</body>
+</html>
